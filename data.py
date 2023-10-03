@@ -6,7 +6,13 @@ import json
 
 class Schedule:
     def add_appointment(self, name, day, hours):
-        self.__dict__[name] = {day: hours}
+        if hours == ('', ''):
+            return
+
+        if name not in self.__dict__.keys():
+            self.__dict__[name] = {}
+
+        self.__dict__[name][day] = hours
 
 
 class Month:
@@ -18,6 +24,7 @@ class Month:
         self.year = None
         self.center = None
         self.type = None
+        self.leader = None
         self.holidays = []
         self.schedule = Schedule()
 
@@ -60,11 +67,27 @@ def get_dataframe():
     #     print(line)
 
     month = Month()
+    month.center = data[0][0]
+    month.type = data[1][0]
+    month.month = data[0][1]
+    month.year = data[1][1]
+    month.leader = data[2][0]
+
     for line_num in range(4, len(data)):
-        for col_num in range(len(data[line_num])):
-            if data[line_num][col_num] in ['d', 'n'] or data[line_num][col_num].isdigit():
-                print(data[line_num][0], data[2][col_num], data[line_num][col_num])
-                # month.add_appointment(data[line_num][0], data[] )
+        for col_num in range(2, len(data[line_num]), 2):
+            hours = (data[line_num][col_num], data[line_num][col_num+1])
+            if hours != ('', ''):
+                name = data[line_num][0]
+                day = (data[0][col_num], data[2][col_num])
+
+                month.add_appointment(name, day, hours)
+
+    for col_num in range(2, len(data[1]), 2):
+        if data[1][col_num] == 'f':
+            month.holidays.append(data[2][col_num])
+
+    print(month.__dict__)
+    print(month.schedule.__dict__)
 
 
 get_dataframe()
