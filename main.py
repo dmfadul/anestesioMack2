@@ -40,7 +40,11 @@ def get_sheet_info():
 
 
 m = Month()
+m.year = 2023
+m.month = 1
 
-m.load_from_db("CCG", "-", "-", "BASE")
-print(m.__dict__)
-print(m.schedule.__dict__)
+m.new_month()
+
+# m.load_from_db("CCG", "-", "-", "BASE")
+# print(m.__dict__)
+# print(m.schedule.__dict__)

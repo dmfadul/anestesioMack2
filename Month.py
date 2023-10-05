@@ -1,7 +1,12 @@
 import datetime
+import calendar
 import sqlite3
 import hashlib
 import json
+
+MESES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
+DIAS_SEM = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM']
+STR_DAY = 26
 
 
 class Schedule:
@@ -42,7 +47,7 @@ class Month:
     def __init__(self):
         self.user = "ADMIN"
         self.lst_change = None
-        self.month = None
+        self._month = None
         self.year = None
         self.center = None
         self.type = None
@@ -55,6 +60,17 @@ class Month:
         return f"{self.center}{self.month}{self.year}{self.type}"
 
     @property
+    def month(self):
+        if isinstance(self._month, str):
+            return MESES.index(self._month)
+        else:
+            return self._month
+
+    @month.setter
+    def month(self, month):
+        self._month = month
+
+    @property
     def hash(self):
         data = self.schedule.convert_to_str() + json.dumps(self.holidays)
         hash_obj = hashlib.sha256(data.encode())
@@ -64,6 +80,19 @@ class Month:
 
     def add_appointment(self, name, day, hours):
         self.schedule.add_appointment(name, day, hours)
+
+    def new_month(self):
+        month = self.month - 1 if not self.month == 1 else 12
+        year = self.year if not self.month == 1 else self.year - 1
+
+        str_weekday = datetime.datetime.strptime(f"{STR_DAY}/{month}/{year}", "%d/%m/%Y").weekday()
+
+        _, last_day = calendar.monthrange(year, month)
+
+        days_in_month = [x % last_day + 1 for x in range(STR_DAY - 1, STR_DAY + last_day - 1)]  # create days list
+        days_in_month = [(x, (str_weekday + i) % 7) for i, x in enumerate(days_in_month)]  # Add weekdays as ints
+        days_in_month = [(x[0], DIAS_SEM[x[1]]) for x in days_in_month]  # Replace ints by strs
+        print(days_in_month)
 
     def save_to_db(self):
         conn = sqlite3.connect('database.db')
