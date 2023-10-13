@@ -1,3 +1,7 @@
-http://35.182.110.190 {
+www1.domain.com {
+    redir https://domain.com{uri}
+}
+
+domain.com {
     reverse_proxy localhost:8000
 }
