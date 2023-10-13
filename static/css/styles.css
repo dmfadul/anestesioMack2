@@ -12,6 +12,17 @@ header {
   text-align: center;
 }
 
+.header-content {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#logo {
+  width: 100px;
+  height: auto;
+}
+
 nav ul {
   color: #D3D3D3;
   padding: 0;
