@@ -3,6 +3,10 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f4f4;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 100% of the viewport height */
 }
 
 header {
@@ -23,31 +27,18 @@ header {
   height: auto;
 }
 
-nav ul {
-  color: #D3D3D3;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  overflow: hidden;
-}
-
-nav ul li {
-  float: left;
-  color: #D3D3D3;
-  display: inline;
-  padding: 0 20px 0 20px;
-}
-
-nav ul li a {
-  color: #D3D3D3; /* Replace with your desired color, light gray in this case */
-}
-
 main {
   max-width: 600px;
   margin: 20px auto;
   padding: 20px;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#login {
+  border: 2px solid #ccc;
+  padding: 20px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2), -3px -3px 10px rgba(255, 255, 255, 0.7);
 }
 
 .login-register form {
@@ -57,6 +48,7 @@ main {
 input[type=text],
 input[type=email],
 input[type=password] {
+  max-width: 530px;
   width: 100%;
   padding: 12px;
   margin: 8px 0;
