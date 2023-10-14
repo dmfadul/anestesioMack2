@@ -16,17 +16,6 @@ header {
   text-align: center;
 }
 
-.header-content {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#logo {
-  width: 100px;
-  height: auto;
-}
-
 main {
   max-width: 600px;
   margin: 20px auto;
@@ -35,29 +24,55 @@ main {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#login {
-  border: 2px solid #ccc;
-  padding: 20px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2), -3px -3px 10px rgba(255, 255, 255, 0.7);
+a {
+  color: black;
+  text-decoration: none;
+}
+
+input[type=text],
+input[type=email],
+input[type=password] {
+  width: 90%;
+  padding: 12px;
+  margin: 8px 0;
+}
+
+button[type=submit] {
+  display: block;
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
 }
 
 .login-register form {
   margin-bottom: 20px;
 }
 
-input[type=text],
-input[type=email],
-input[type=password] {
-  max-width: 530px;
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
+.header-content {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
-button[type=submit] {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  cursor: pointer;
+.button-container {
+  display: flex;
+  flex-direction: row; /* Optional, as 'row' is the default value */
+  justify-content: flex-start;
+}
+
+.button-container button {
+  margin-right: 10px;
+}
+
+#login {
+  border: 2px solid #ccc;
+  padding: 20px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2), -3px -3px 10px rgba(255, 255, 255, 0.7);
+}
+
+#logo {
+  width: 100px;
+  height: auto;
 }

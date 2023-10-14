@@ -15,12 +15,13 @@
   </header>
   <main>
     <section class="login-register">
-      <form id="login">
+      <form id="login" method="POST">
         <h2>Login</h2>
-        <input type="text" placeholder="Nome" required>
-        <input type="password" placeholder="Password" required>
+        <input type="text" name="name" placeholder="Nome" required>
+        <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Login</button>
       </form>
+      <a href="/signup">Sign up</a>
     </section>
   </main>
 </body>
