@@ -7,28 +7,29 @@
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-  <header>
+  <header onclick="window.location.href='/'">
     <div class="header-content">
       <h1>Grupo de Anestesia Mackenzie</h1>
       <img src="/static/logo.png" alt="Mackenzie Doctors Logo" id="logo">
     </div>
   </header>
   <main id="main-container">
-    <form id="signup">
+    <form id="signup" method="POST">
       <h2>Sign Up</h2>
-      <input type="text" name="name" placeholder="Nome" required>
-      <input type="text" name="lastName" placeholder="Sobrenome" required>
-      <input type="text" name="phoneNum" placeholder="Telefone" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}">
-      <input type="email" name="email" placeholder="Email" required>
-      <input type="text" name="crm" placeholder="CRM" required>
-      <input type="text" name="rqm" placeholder="RQM" required>
-      <input type="password" name="password" placeholder="Senha" required>
-      <input type="password" placeholder="Confirme a Senha" required>
+      <input type="text" name="name" id="name" placeholder="Nome Completo" required>
+      <input type="text" name="phoneNum" id="phoneNum" placeholder="Celular" required>
+      <input type="email" name="email" id="email" placeholder="Email" required>
+      <input type="text" name="crm" id="crm" placeholder="CRM" required>
+      <input type="text" name="rqe" id="rqe" placeholder="RQE" required>
+      <input type="password" name="password" id="password" placeholder="Senha" required>
+      <input type="password" name="confirmPass" id="confirmPass" placeholder="Confirme a Senha" required>
       <div class="button-container">
         <button type="submit">Sign Up</button>
         <button type="button" onclick="location.href='/';">Cancelar</button>
       </div>
     </form>
   </main>
+  <script src="/static/scripts/phone_formatting.js"></script>
+  <script src="/static/scripts/password_check.js"></script>
 </body>
 </html>
