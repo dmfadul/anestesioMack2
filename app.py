@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 app.secret_key = secret_key.secret_key
 
-with open("/home/david/Files/anestesioMack2/users_dict.json", 'r') as f:
+with open("users_dict.json", 'r') as f:
     users = json.load(f)
 
 
@@ -45,7 +45,7 @@ def signup():
         add_user_to_database(crm, name, phone, email, rqe)
         users[crm] = password
 
-        with open("/home/david/Files/anestesioMack2/users_dict.json", 'w') as g:
+        with open("users_dict.json", 'w') as g:
             json.dump(users, g)
 
         flash("Signup completo!")
