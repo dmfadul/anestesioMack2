@@ -1,5 +1,5 @@
 import gspread
-from Month import Month
+import month
 
 
 def get_sheet_info():
@@ -8,16 +8,17 @@ def get_sheet_info():
 
     data = interface_sheet.get_values()
 
+    base = month.Base()
+    base.center = data[0][0]
+    base.data = data
+
     # for line in data:
     #     print(line)
 
-    month = Month()
-    month.center = data[0][0]
-    month.type = data[1][0]
-    month.month = data[0][1]
-    month.year = data[1][1]
-    month.leader = data[2][0]
+    # base.save_to_db()
 
+
+def convert_list_into_dict(data):
     for line_num in range(4, len(data)):
         for col_num in range(2, len(data[line_num]), 2):
             hours = (data[line_num][col_num], data[line_num][col_num+1])
@@ -39,12 +40,11 @@ def get_sheet_info():
     # month.save_to_db()
 
 
-m = Month()
-m.year = 2023
-m.month = 1
-
-m.new_month()
-
+# m = Month()
+#
 # m.load_from_db("CCG", "-", "-", "BASE")
 # print(m.__dict__)
 # print(m.schedule.__dict__)
+
+n = month.new_month('CCG', 'DEZ', 2023)
+get_sheet_info()

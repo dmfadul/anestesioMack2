@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def add_user_to_database(crm, name, phone, email, rqe):
+def add_user(crm, name, phone, email, rqe):
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
 

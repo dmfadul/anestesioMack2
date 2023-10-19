@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Handsontable Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <header onclick="window.location.href='/'">
+    <div class="header-content">
+      <h1>Grupo de Anestesia Mackenzie</h1>
+      <img src="/static/logo.png" alt="Mackenzie Doctors Logo" id="logo">
+    </div>
+  </header>
+
+  <div id="example">
+      <script>
+        // Your data
+        const data = {{ data|safe }};
+
+        // Initialization
+        const container = document.getElementById('example');
+        const hot = new Handsontable(container, {
+            data: data,
+            rowHeights: 20, // Or an array to specify each row
+            customBorders: true,
+            height: 'auto',
+            licenseKey: 'non-commercial-and-evaluation',
+            colWidths(index) {
+                switch (index) {
+                  case 0:
+                    return 250;
+                  case 1:
+                    return 100;
+                  default:
+                    return 40;
+                }
+            }
+         });
+
+
+      </script>
+  </div>
+</body>
+</html>

@@ -77,3 +77,7 @@ button[type=submit] {
   width: 100px;
   height: auto;
 }
+
+#example {
+  padding: 20px;
+}
