@@ -1,31 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anestesio</title>
-  <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body>
-  <header onclick="window.location.href='/'">
-    <div class="header-content">
-      <h1>Grupo de Anestesia Mackenzie</h1>
-      <img src="/static/logo.png" alt="Mackenzie Doctors Logo" id="logo">
-    </div>
-    <form action="/logout" method="post" style="float: right;">
-      <button type="submit">Sign Out</button>
-    </form>
-  </header>
-  <main id="main-container">
+{% extends 'base.html' %}
 
-      <iframe class="iframe-container"
-        width="560"
-        height="315"
-        src="https://rumble.com/embed/v29c3lw/?pub=2u0m0q"
-        frameborder="0"
-        allowfullscreen
-      ></iframe>
-
-  </main>
-</body>
-</html>
+{% block mainContent %}
+  <iframe class="iframe-container"
+    width="560"
+    height="315"
+    src="https://rumble.com/embed/v29c3lw/?pub=2u0m0q"
+    frameborder="0"
+    allowfullscreen
+  ></iframe>
+{% endblock %}

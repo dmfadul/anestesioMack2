@@ -1,28 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anestesio</title>
-  <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body>
-  <header onclick="window.location.href='/'">
-    <div class="header-content">
-      <h1>Grupo de Anestesia Mackenzie</h1>
-      <img src="/static/logo.png" alt="Mackenzie Doctors Logo" id="logo">
-    </div>
-  </header>
-  <main>
-    <section class="login-register">
-      <form id="login" method="POST">
-        <h2>Login</h2>
-        <input type="text" name="crm" id="crm" placeholder="CRM" required>
-        <input type="password" name="password" id="password" placeholder="Senha" required>
-        <button type="submit">Login</button>
-      </form>
-      <a href="/signup">Sign up</a>
-    </section>
-  </main>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block header_logout %}
+{% endblock %}
+
+{% block mainContent %}
+  <section class="login-register">
+    <form id="login" method="POST">
+      <h2>Login</h2>
+      <input type="text" name="crm" id="crm" placeholder="CRM" required>
+      <input type="password" name="password" id="password" placeholder="Senha" required>
+      <button type="submit">Login</button>
+    </form>
+    <a href="/signup">Inscreva-se</a>
+  </section>
+{% endblock %}

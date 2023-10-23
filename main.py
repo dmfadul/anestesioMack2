@@ -1,50 +1,50 @@
-import gspread
+import database
 import month
 
+import gspread
 
-def get_sheet_info():
+
+def get_sheet_info(center):
     spread_sheet = gspread.service_account().open("GrupoHuem")
     interface_sheet = spread_sheet.worksheet("INTERFACE_2")
+    interface_sheet_3 = spread_sheet.worksheet("INTERFACE_3")
 
     data = interface_sheet.get_values()
+    data.pop(1)
+    data.pop(2)
+    data[0].pop(0)
+    data[1].pop(1)
 
-    base = month.Base()
-    base.center = data[0][0]
-    base.data = data
+    w_days = [x for x in data[0] if x != '']
+    m_days = [x for x in data[1] if x != '']
 
-    # for line in data:
-    #     print(line)
+    data.pop(0)
+    data.pop(0)
 
-    # base.save_to_db()
+    for line in data:
+        line.pop(1)
+
+    for line in data:
+        for i in range(len(line)):
+            if line[i] != 'n':
+                continue
+            line[i-1] += 'n'
+
+    for line in data:
+        for i in range(2, (len(line)//2)+2):
+            line.pop(i)
+
+    data.insert(0, m_days)
+    data.insert(0, w_days)
+
+    for line in data:
+        print(line)
+
+    interface_sheet_3.update("A1:AJ43", data)
+
+    # base = month.Base(center=center, data=data)
+
+    # database.save_base(base)
 
 
-def convert_list_into_dict(data):
-    for line_num in range(4, len(data)):
-        for col_num in range(2, len(data[line_num]), 2):
-            hours = (data[line_num][col_num], data[line_num][col_num+1])
-            if hours != ('', ''):
-                name = data[line_num][0]
-                day = (data[0][col_num], data[2][col_num])
-
-                month.add_appointment(name, day, hours)
-
-    for col_num in range(2, len(data[1]), 2):
-        if data[1][col_num] == 'f':
-            month.holidays.append(data[2][col_num])
-
-    # month.schedule.convert_to_str()
-    # month.delete_from_db("CCG", "-", "-", "BASE")
-    # print(month.__dict__)
-    # print(month.schedule.__dict__)
-    #
-    # month.save_to_db()
-
-
-# m = Month()
-#
-# m.load_from_db("CCG", "-", "-", "BASE")
-# print(m.__dict__)
-# print(m.schedule.__dict__)
-
-n = month.new_month('CCG', 'DEZ', 2023)
-get_sheet_info()
+get_sheet_info("CCO")

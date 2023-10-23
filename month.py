@@ -1,21 +1,21 @@
+import session_var
+import sequences
 import datetime
 import calendar
-import sqlite3
 import hashlib
+import math
 import json
 
-MESES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
 DIAS_SEM = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM']
-STR_DAY = 26
 
 
 class Base:
-    def __init__(self):
-        self.user = "ADMIN"
-        self.lst_change = datetime.datetime.now().strftime("%Y-%b-%d %H:%M")
-        self.center = None
-        self.data = None
-        self._hash = None
+    lst_change = datetime.datetime.now().strftime("%Y-%b-%d %H:%M")
+
+    def __init__(self, user=None, center=None, data=None):
+        self.user = user
+        self.center = center
+        self.data = data if data is not None else []
 
     @property
     def id(self):
@@ -23,185 +23,161 @@ class Base:
 
     @property
     def hash(self):
-        if self._hash is not None:
-            return self._hash
-
-        data = json.dumps(self.data[4:])
+        data = json.dumps(self.data)
         hash_obj = hashlib.sha256(data.encode())
         hash_data = hash_obj.hexdigest()
 
         return hash_data
 
-    @hash.setter
-    def hash(self, this_hash):
-        self._hash = this_hash
+    @property
+    def data_dict_names(self):
+        return self.create_dict_names()
 
-    def save_to_db(self):
-        conn = sqlite3.connect('months.db')
-        conn.execute("PRAGMA foreign_keys = ON")
-        cursor = conn.cursor()
+    @property
+    def data_dict_days(self):
+        return self.create_dict_days()
 
-        values = self.id, self.center, self.hash, self.user, self.lst_change, json.dumps(self.data)
-        cursor.execute(f"INSERT INTO bases VALUES {values}")
+    def create_dict_names(self):
+        data_dict = {}
+        for line_num in range(len(self.data)):
+            name = self.data[line_num][0]
+            if name == '':
+                continue
 
-        conn.commit()
-        cursor.close()
-        conn.close()
+            for col_num in range(len(self.data[0])):
+                day = (self.data[0][col_num], self.data[1][col_num])
+                hours = self.data[line_num][col_num]
 
-    def load_from_db(self, center):
-        self.center = center
+                if '' in day or hours == '':
+                    continue
 
-        conn = sqlite3.connect('months.db')
-        conn.execute("PRAGMA foreign_keys = ON")
-        cursor = conn.cursor()
+                if name not in data_dict.keys():
+                    data_dict[name] = {}
 
-        cursor.execute("SELECT * FROM bases WHERE id=?", (self.id,))
-        entry = cursor.fetchall()[0]
+                data_dict[name][day] = hours
 
-        _, self.center, self.hash, self.user, self.lst_change, data = entry
-        self.data = json.loads(data)
+        return data_dict
 
-        cursor.close()
-        conn.close()
+    def create_dict_days(self):
+        data_dict = {}
+        for col_num in range(1, len(self.data[0])):
+            for line_num in range(2, len(self.data)):
+                hours = self.data[line_num][col_num]
+                if hours == '' or hours is None:
+                    continue
 
+                name = self.data[line_num][0]
+                week_day = self.data[0][col_num]
+                month_day = self.data[1][col_num]
 
-class Schedule:
-    def add_appointment(self, name, day, hours):
-        if hours == ('', ''):
-            return
+                if (week_day, month_day) not in data_dict.keys():
+                    data_dict[(week_day, month_day)] = {}
 
-        if name not in self.__dict__.keys():
-            self.__dict__[name] = {}
+                data_dict[(week_day, month_day)][name] = hours
 
-        self.__dict__[name][day] = hours
-
-    # def convert_to_str(self):
-    #     str_dict = {name: {} for name in self.__dict__.keys()}
-    #
-    #     for name in self.__dict__.keys():
-    #         for day in self.__dict__[name]:
-    #             if isinstance(day, tuple):
-    #                 str_dict[name][f"{day[0]}_{day[1]}"] = self.__dict__[name][day]
-    #
-    #     return json.dumps(str_dict)
-    #
-    # def convert_from_str(self, str_data):
-    #     temp_dict = json.loads(str_data)
-    #
-    #     for name in temp_dict:
-    #         if name not in self.__dict__.keys():
-    #             self.__dict__[name] = {}
-    #         for day in temp_dict[name].keys():
-    #             if isinstance(day, str):
-    #                 alt_day = day.split('_')
-    #                 alt_day = tuple([alt_day[0], int(alt_day[1])])
-    #
-    #                 self.__dict__[name][alt_day] = tuple(temp_dict[name][day])
+        return data_dict
 
 
-class Month:
-    def __init__(self):
-        self.user = "ADMIN"
-        self.lst_change = datetime.datetime.now().strftime("%m-%d-%Y %H:%M")
-        self._month = None
-        self.year = None
-        self.center = None
-        self.type = None
-        self.leader = None
-        self.holidays = []
-        self.schedule = Schedule()
+class Month(Base):
+
+    def __init__(self, user=None, center=None, data=None, year=None, month=None, status=0, leader=None):
+        super().__init__(user, center, data)
+
+        self.year = year
+        self.month = month
+        self.status = status
+        self.leader = leader
 
     @property
     def id(self):
-        return f"{self.center}{self.month}{self.year}{self.type}"
+        return f"{self.center}{self.month}{self.year}{self.status}"
 
     @property
-    def month(self):
-        if not isinstance(self._month, str):
-            return self._month
-
-        return MESES.index(self._month)
-
-    @month.setter
-    def month(self, month):
-        self._month = month
+    def table(self):
+        return json.dumps(self.data[:-1])
 
     @property
-    def hash(self):
-        data = self.schedule.convert_to_str() + json.dumps(self.holidays)
-        hash_obj = hashlib.sha256(data.encode())
-        hash_data = hash_obj.hexdigest()
+    def previous_month(self):
+        if self.month == 1:
+            return 12
+        else:
+            return self.month - 1
 
-        return hash_data
+    @property
+    def previous_year(self):
+        if self.month == 1:
+            return self.year - 1
+        else:
+            return self.year
 
-    def add_appointment(self, name, day, hours):
-        self.schedule.add_appointment(name, day, hours)
+    def gen_curr_date(self, curr_day):
+        if session_var.STR_DAY <= curr_day <= 31:
+            curr_month = int(self.previous_month)
+            curr_year = int(self.previous_year)
+        else:
+            curr_month = int(self.month)
+            curr_year = int(self.year)
 
-    def save_to_db(self):
-        conn = sqlite3.connect('months.db')
-        conn.execute("PRAGMA foreign_keys = ON")
-        cursor = conn.cursor()
+        current_date = datetime.datetime.strptime(f"{curr_day:02d}/{curr_month:02d}/{curr_year}", "%d/%m/%Y")
 
-        values = self.id, self.center, self.type, self.hash, self.user, self.lst_change, self.schedule.convert_to_str()
-        cursor.execute(f"INSERT INTO months VALUES {values}")
+        return current_date
 
-        conn.commit()
-        cursor.close()
-        conn.close()
+    def resolve_sequences(self):
+        seq_dict = sequences.index.get(self.center)
 
-    def load_from_db(self, center, month, year, stage):
-        self.center, self.month, self.year, self.type = center, month, year, stage
+        for row_num in range(len(self.data)):
+            name = self.data[row_num][0]
+            doctor_dict = seq_dict.get(name)
+            if doctor_dict is None:
+                continue
 
-        conn = sqlite3.connect('months.db')
-        conn.execute("PRAGMA foreign_keys = ON")
-        cursor = conn.cursor()
+            for col_num in range(len(self.data[0])):
+                curr_weekday = self.data[0][col_num] if self.data[0][col_num] != '' else None
+                curr_day = int(self.data[1][col_num]) if self.data[1][col_num] != '' else None
 
-        cursor.execute("SELECT * FROM months WHERE id=?", (self.id,))
-        data = cursor.fetchall()[0]
+                if curr_weekday is None or curr_day is None:
+                    continue
 
-        str_schedule = data[6]
-        self.schedule.convert_from_str(str_schedule)
+                str_loop = sequences.str_point + datetime.timedelta(DIAS_SEM.index(curr_weekday))
+                delta = self.gen_curr_date(curr_day) - str_loop
+                parity = (delta.days//7) % 2
 
-        cursor.close()
-        conn.close()
+                hours = doctor_dict.get((curr_weekday, parity))
 
-    def delete_from_db(self, center, month, year, stage):
-        self.center, self.month, self.year, self.type = center, month, year, stage
+                if hours is None:
+                    continue
 
-        conn = sqlite3.connect('months.db')
-        conn.execute("PRAGMA foreign_keys = ON")
-        cursor = conn.cursor()
-
-        cursor.execute("DELETE FROM database WHERE id=?", (self.id,))
-
-        conn.commit()
-        cursor.close()
-        conn.close()
+                self.data[row_num][col_num] = hours
 
 
-def new_month(center, month, year):
-    base = Base()
-    base.load_from_db(center)
+def create_new_month(base, month, year):
+    str_day = session_var.STR_DAY
 
-    if isinstance(month, str):
-        month = MESES.index(month) + 1
+    new_month = Month(user=session_var.user, center=base.center, year=year, month=month, leader=session_var.LEADER)
 
-    if month == 1:
-        str_month = 12
-        str_year = year - 1
-    else:
-        str_month = month - 1
-        str_year = year
+    str_month = new_month.previous_month
+    str_year = new_month.previous_year
 
-    first_weekday = datetime.datetime.strptime(f"{STR_DAY}/{str_month}/{str_year}", "%d/%m/%Y").weekday()
-
+    first_weekday = datetime.datetime.strptime(f"{str_day}/{str_month}/{str_year}", "%d/%m/%Y").weekday()
     _, last_day = calendar.monthrange(year, str_month)
 
-    month_days = [x % last_day + 1 for x in range(STR_DAY - 1, STR_DAY + last_day - 1)]  # create days list
-    week_days = [DIAS_SEM[(first_weekday + i) % 7] for i in range(len(month_days))]  # Weekdays as strings
+    month_days = ['']+[str(x % last_day + 1) for x in range(str_day - 1, str_day + last_day - 1)]  # create days list
+    week_days = ['']+[DIAS_SEM[(first_weekday + i) % 7] for i in range(len(month_days)-1)]  # Weekdays as strings
+    week_numbers = ['']+[str(math.ceil(int(x)/7)) for x in month_days if x != '']
 
-    week_days = [week_days[i // 2] if i % 2 == 0 else ' ' for i in range(len(week_days) * 2 - 1)]
-    month_days = [month_days[i // 2] if i % 2 == 0 else ' ' for i in range(len(month_days) * 2 - 1)]
+    days = list(zip(week_days,  week_numbers))
 
-    print(week_days)
-    print(month_days)
+    new_data = [week_days, month_days]
+    for name in base.data_dict_names.keys():
+        line = [name]
+        for col_num in range(1, len(month_days)):
+            hours = base.data_dict_names.get(name).get(days[col_num])
+            line.append(hours)
+        new_data.append(line)
+
+    new_data.append([None] * len(month_days))
+
+    new_month.data = new_data
+    new_month.resolve_sequences()
+
+    return new_month
