@@ -47,4 +47,9 @@ def get_sheet_info(center):
     # database.save_base(base)
 
 
-get_sheet_info("CCO")
+m = database.load_base("CCG")
+nm = month.create_new_month(m, 2023, 11)
+print(nm.data_dict_days)
+print(nm.dict_day_key(25))
+
+print(nm.data_dict_days.get(nm.dict_day_key(25)))

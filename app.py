@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, request, abort, redirect, url_for, flash
+from flask import Flask, session, render_template, request, abort, redirect, url_for, flash, jsonify
 import session_var
 import secret_key
 import database
@@ -11,7 +11,7 @@ app.secret_key = secret_key.secret_key  # Does it have to change periodically?
 with open("users_dict.json", 'r') as f:
     users = json.load(f)
 
-data = database.load_month("CCG", 2023, 11, 0).table
+month = database.load_month("CCG", 2023, 11)
 
 
 @app.route("/")
@@ -23,7 +23,17 @@ def hub():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("calendar.html")
+    return redirect(url_for("calendar"))
+
+
+@app.route("/calendar/")
+def calendar():
+    return render_template("calendar.html", month=month)
+
+
+@app.route('/calendar_day/<int:day>', methods=['GET'])
+def calendar_day(day):
+    return jsonify({"data": month.data_dict_days.get(month.dict_day_key(day), "data not found")})
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -77,4 +87,4 @@ def protected():
 
 @app.route("/table")
 def table():
-    return render_template("table.html", data=data)
+    return render_template("table.html", data=month.table)

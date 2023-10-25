@@ -7,6 +7,7 @@ import math
 import json
 
 DIAS_SEM = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM']
+MESES = ["JANEIRO", "", "", "", "", "", "", "", "", "", "NOVEMBRO", ""]
 
 
 class Base:
@@ -93,30 +94,63 @@ class Month(Base):
         return f"{self.center}{self.month}{self.year}{self.status}"
 
     @property
+    def month_name(self):
+        return MESES[self.month-1]
+
+    @property
     def table(self):
         return json.dumps(self.data[:-1])
 
     @property
-    def previous_month(self):
+    def str_month(self):
         if self.month == 1:
             return 12
         else:
             return self.month - 1
 
     @property
-    def previous_year(self):
+    def str_year(self):
         if self.month == 1:
             return self.year - 1
         else:
             return self.year
 
+    @property
+    def first_week_day(self):
+        str_day = session_var.STR_DAY
+        return datetime.datetime.strptime(f"{str_day}/{self.str_month}/{self.str_year}", "%d/%m/%Y").weekday()
+
+    @property
+    def month_len(self):
+        _, last_day = calendar.monthrange(self.str_year, self.str_month)
+
+        return last_day
+
+    @property
+    def month_days(self):
+        str_day = session_var.STR_DAY
+        days = [str(x % self.month_len + 1) for x in range(str_day - 1, str_day + self.month_len - 1)]
+
+        return days
+
+    @property
+    def calendar_days(self):
+        days = [''] * ((self.first_week_day+2) % 6)
+        days += self.month_days
+        days += [''] * ((42 - len(days)) % 7)
+
+        days = [days[i:i+7] for i in range(0, len(days), 7)]
+
+        return days
+
+    def dict_day_key(self, day):
+        return DIAS_SEM[self.gen_curr_date(day).weekday()], str(day)
+
     def gen_curr_date(self, curr_day):
         if session_var.STR_DAY <= curr_day <= 31:
-            curr_month = int(self.previous_month)
-            curr_year = int(self.previous_year)
+            curr_month, curr_year = int(self.str_month), int(self.str_year)
         else:
-            curr_month = int(self.month)
-            curr_year = int(self.year)
+            curr_month, curr_year = int(self.month), int(self.year)
 
         current_date = datetime.datetime.strptime(f"{curr_day:02d}/{curr_month:02d}/{curr_year}", "%d/%m/%Y")
 
@@ -150,22 +184,14 @@ class Month(Base):
                 self.data[row_num][col_num] = hours
 
 
-def create_new_month(base, month, year):
-    str_day = session_var.STR_DAY
-
+def create_new_month(base, year, month):
     new_month = Month(user=session_var.user, center=base.center, year=year, month=month, leader=session_var.LEADER)
 
-    str_month = new_month.previous_month
-    str_year = new_month.previous_year
+    month_days = ['']+new_month.month_days
+    week_days = ['']+[DIAS_SEM[(new_month.first_week_day + i) % 7] for i in range(len(month_days)-1)]
+    week_indexes = ['']+[str(math.ceil(int(x)/7)) for x in month_days if x != '']
 
-    first_weekday = datetime.datetime.strptime(f"{str_day}/{str_month}/{str_year}", "%d/%m/%Y").weekday()
-    _, last_day = calendar.monthrange(year, str_month)
-
-    month_days = ['']+[str(x % last_day + 1) for x in range(str_day - 1, str_day + last_day - 1)]  # create days list
-    week_days = ['']+[DIAS_SEM[(first_weekday + i) % 7] for i in range(len(month_days)-1)]  # Weekdays as strings
-    week_numbers = ['']+[str(math.ceil(int(x)/7)) for x in month_days if x != '']
-
-    days = list(zip(week_days,  week_numbers))
+    days = list(zip(week_days,  week_indexes))
 
     new_data = [week_days, month_days]
     for name in base.data_dict_names.keys():
