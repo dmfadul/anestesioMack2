@@ -51,3 +51,14 @@ body {
     transform: translateY(-3px);  /* Lift the card up slightly */
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);  /* Increase the shadow depth */
 }
+
+@media screen and (max-width: 600px) {
+  table {
+    width: 100%; /* Ensure the table still spans the full width */
+  }
+  th, td {
+    padding: 5px; /* Reduce padding for smaller screens */
+    display: block; /* Change to block display to stack cells vertically */
+    text-align: left; /* Align text to the left */
+  }
+}
