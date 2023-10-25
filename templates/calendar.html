@@ -39,25 +39,25 @@
 
 {% block mainContent %}
     <table class="calendar">
-            <tr class="calendar-header">
-        <th colspan="7">{{ month.month_name }} {{month.year }}</th>
-    </tr>
-    <tr>
-        <td>Sab</td>
-        <td>Dom</td>
-        <td>Seg</td>
-        <td>Ter</td>
-        <td>Qua</td>
-        <td>Qui</td>
-        <td>Sex</td>
-    </tr>
-{% for week in month.calendar_days %}
-    <tr>
-        {% for day in week %}
-            <td>{{ day }}</td>
+        <tr class="calendar-header">
+            <th colspan="7">{{ month.month_name }} {{month.year }}</th>
+        </tr>
+        <tr>
+            <td>Sab</td>
+            <td>Dom</td>
+            <td>Seg</td>
+            <td>Ter</td>
+            <td>Qua</td>
+            <td>Qui</td>
+            <td>Sex</td>
+        </tr>
+        {% for week in month.calendar_days %}
+            <tr>
+                {% for day in week %}
+                    <td>{{ day }}</td>
+                {% endfor %}
+            </tr>
         {% endfor %}
-    </tr>
-{% endfor %}
     </table>
 
     <div id="dictData"></div>

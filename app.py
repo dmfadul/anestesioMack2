@@ -23,7 +23,8 @@ def hub():
 
 @app.route("/dashboard")
 def dashboard():
-    return redirect(url_for("calendar"))
+    return render_template("dashboard.html")
+    # return redirect(url_for("calendar"))
 
 
 @app.route("/calendar/")
