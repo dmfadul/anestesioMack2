@@ -74,26 +74,22 @@ button[type=submit] {
 }
 
 @media screen and (max-width: 600px) {
-      header {
-        font-size: 10px;
-      }
+    header {
+    font-size: 7px;
+    }
 
-      #logo {
-        width: 30px;
-        height: auto;
-      }
+    #logo {
+    width: 30px;
+    height: auto;
+    }
 
-      #logout {
-        padding: 30px 30px;
-      }
+    #logout {
+    padding: 0px 0px;
+    }
 
-      main {
-        max-width: 600px;
-        margin: 50px auto;
-        padding: 10px 10px;
-      }
+    td {
+    font-size: 11px; /* Adjust the width to your desired size */
+    }
 
-      td {
-        font-size: 11px; /* Adjust the width to your desired size */
-      }
+
 }
