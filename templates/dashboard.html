@@ -1,42 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Anestesio</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/static/css/styles.css">
-  <link rel="stylesheet" href="/static/css/calendar.css">
-</head>
-<body>
-  <header onclick="window.location.href='/'">
-    <div class="header-content">
-      <h1>Grupo de Anestesia Mackenzie</h1>
-      <img src="/static/logo.png" alt="Mackenzie Doctors Logo" id="logo">
-    </div>
+{% extends 'base.html' %}
 
-    <form action="/logout" method="post" style="float: right;">
-      <button type="submit">Sign Out</button>
-    </form>
-
-  </header>
-  <main id="main-container">
-    <table class="calendar">
-      <tr class="calendar-header">
-        <th colspan="7"> TESTE </th>
-      </tr>
-      <tr>
-          <td>Sab</td>
-          <td>Dom</td>
-          <td>Seg</td>
-          <td>Ter</td>
-          <td>Qua</td>
-          <td>Qui</td>
-          <td>Sex</td>
-      </tr>
-    </table>
-    <div><a href="/calendar">Calendario</a></div>
+{% block mainContent %}
+    <div><a href="/calendar">CCG</a></div>
     <div><a href="">Admin</a></div>
     <div><a href="">Perfil</a></div>
-  </main>
-</body>
-</html>
+{% endblock %}

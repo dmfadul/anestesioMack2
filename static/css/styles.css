@@ -1,3 +1,31 @@
+header {
+  font-size: 18px;
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer
+}
+
+.header-content {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#logo {
+  width: 100px;
+  height: auto;
+}
+
+main {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -7,22 +35,6 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh; /* 100% of the viewport height */
-}
-
-header {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  cursor: pointer
-}
-
-main {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 a {
@@ -38,6 +50,10 @@ input[type=password] {
   margin: 8px 0;
 }
 
+#hours_table {
+  padding: 20px;
+}
+
 button[type=submit] {
   display: block;
   background-color: #333;
@@ -45,16 +61,6 @@ button[type=submit] {
   border: none;
   padding: 12px 20px;
   cursor: pointer;
-}
-
-.login-register form {
-  margin-bottom: 20px;
-}
-
-.header-content {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .button-container {
@@ -67,17 +73,27 @@ button[type=submit] {
   margin-right: 10px;
 }
 
-#login {
-  border: 2px solid #ccc;
-  padding: 20px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2), -3px -3px 10px rgba(255, 255, 255, 0.7);
-}
+@media screen and (max-width: 600px) {
+      header {
+        font-size: 10px;
+      }
 
-#logo {
-  width: 100px;
-  height: auto;
-}
+      #logo {
+        width: 30px;
+        height: auto;
+      }
 
-#example {
-  padding: 20px;
+      #logout {
+        padding: 30px 30px;
+      }
+
+      main {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 10px 10px;
+      }
+
+      td {
+        font-size: 11px; /* Adjust the width to your desired size */
+      }
 }

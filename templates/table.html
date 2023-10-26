@@ -6,13 +6,13 @@
 {% endblock %}
 
 {% block outsideContent %}
-  <div id="example">
+  <div id="hours_table">
       <script>
         // Your data
         const data = {{ data|safe }};
 
         // Initialization
-        const container = document.getElementById('example');
+        const container = document.getElementById('hours_table');
         const hot = new Handsontable(container, {
             data: data,
             rowHeights: 20, // Or an array to specify each row

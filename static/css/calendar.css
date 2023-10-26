@@ -1,11 +1,12 @@
-body {
-    font-family: Arial, sans-serif;
-}
-
 .calendar {
     border-collapse: collapse;
     width: 80%;
     margin: 50px auto;
+}
+
+.calendar-header {
+    background-color: #f2f2f2;
+    font-weight: bold;
 }
 
 .calendar, .calendar th, .calendar td {
@@ -17,24 +18,17 @@ body {
     text-align: center;
 }
 
-.calendar-header {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
 #dictData {
     position: relative;
     left: 60px;  /* adjust this value to move the entire list to the right */
 }
 
-/* Styling the unordered list container */
 #dictData ul {
     list-style-type: none;  /* Remove bullet points */
     padding: 0;
     margin: 0;
 }
 
-/* Styling each list item as a card */
 #dictData li {
     width: 450px;
     background-color: #f9f9f9;  /* Light grey background */
@@ -46,19 +40,7 @@ body {
     transition: transform 0.2s;  /* Smooth transformation transition */
 }
 
-/* Styling for the card on hover */
 #dictData li:hover {
     transform: translateY(-3px);  /* Lift the card up slightly */
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);  /* Increase the shadow depth */
-}
-
-@media screen and (max-width: 600px) {
-  table {
-    width: 100%; /* Ensure the table still spans the full width */
-  }
-  th, td {
-    padding: 5px; /* Reduce padding for smaller screens */
-    display: block; /* Change to block display to stack cells vertically */
-    text-align: left; /* Align text to the left */
-  }
 }
