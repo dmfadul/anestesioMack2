@@ -2,6 +2,7 @@ from flask import Flask, session, render_template, request, abort, redirect, url
 import session_var
 import secret_key
 import database
+import settings
 import json
 
 app = Flask(__name__)
@@ -34,7 +35,10 @@ def calendar():
 
 @app.route('/calendar_day/<int:day>', methods=['GET'])
 def calendar_day(day):
-    return jsonify({"data": month.data_dict_days.get(month.dict_day_key(day), "data not found")})
+    day_key = settings.DIAS_SEM[month.gen_curr_date(day).weekday()], str(day)
+    day_data = month.data_dict_days.get(day_key, "data not found")
+
+    return jsonify({"data": day_data})
 
 
 @app.route("/login", methods=["GET", "POST"])

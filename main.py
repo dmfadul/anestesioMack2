@@ -49,7 +49,6 @@ def get_sheet_info(center):
 
 m = database.load_base("CCG")
 nm = month.create_new_month(m, 2023, 11)
-print(nm.data_dict_days)
-print(nm.dict_day_key(25))
 
-print(nm.data_dict_days.get(nm.dict_day_key(25)))
+d_k = month.DIAS_SEM[nm.gen_curr_date(25).weekday()], str(25)
+print(d_k)

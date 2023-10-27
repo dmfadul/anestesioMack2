@@ -1,13 +1,11 @@
 import session_var
 import sequences
 import datetime
+import settings
 import calendar
 import hashlib
 import math
 import json
-
-DIAS_SEM = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM']
-MESES = ["JANEIRO", "", "", "", "", "", "", "", "", "", "NOVEMBRO", ""]
 
 
 class Base:
@@ -95,7 +93,7 @@ class Month(Base):
 
     @property
     def month_name(self):
-        return MESES[self.month-1]
+        return settings.MESES[self.month-1]
 
     @property
     def table(self):
@@ -143,9 +141,6 @@ class Month(Base):
 
         return days
 
-    def dict_day_key(self, day):
-        return DIAS_SEM[self.gen_curr_date(day).weekday()], str(day)
-
     def gen_curr_date(self, curr_day):
         if session_var.STR_DAY <= curr_day <= 31:
             curr_month, curr_year = int(self.str_month), int(self.str_year)
@@ -172,7 +167,7 @@ class Month(Base):
                 if curr_weekday is None or curr_day is None:
                     continue
 
-                str_loop = sequences.str_point + datetime.timedelta(DIAS_SEM.index(curr_weekday))
+                str_loop = sequences.str_point + datetime.timedelta(settings.DIAS_SEM.index(curr_weekday))
                 delta = self.gen_curr_date(curr_day) - str_loop
                 parity = (delta.days//7) % 2
 
@@ -188,7 +183,7 @@ def create_new_month(base, year, month):
     new_month = Month(user=session_var.user, center=base.center, year=year, month=month, leader=session_var.LEADER)
 
     month_days = ['']+new_month.month_days
-    week_days = ['']+[DIAS_SEM[(new_month.first_week_day + i) % 7] for i in range(len(month_days)-1)]
+    week_days = ['']+[settings.DIAS_SEM[(new_month.first_week_day + i) % 7] for i in range(len(month_days)-1)]
     week_indexes = ['']+[str(math.ceil(int(x)/7)) for x in month_days if x != '']
 
     days = list(zip(week_days,  week_indexes))
