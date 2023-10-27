@@ -141,6 +141,13 @@ class Month(Base):
 
         return days
 
+    def calendar_dict(self, day):
+        day_key = settings.DIAS_SEM[self.gen_curr_date(day).weekday()], str(day)
+        calendar_dict = self.data_dict_days.get(day_key)
+        calendar_list = [f"{key}: {value}" for key, value in calendar_dict.items()]
+
+        return calendar_list
+
     def gen_curr_date(self, curr_day):
         if session_var.STR_DAY <= curr_day <= 31:
             curr_month, curr_year = int(self.str_month), int(self.str_year)

@@ -10,12 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     let output = '<ul>';
 
-                    let dayDict = data.data;
+                    let dayList = data.data;
 
-                    for (let key in dayDict) {
-                        if (dayDict.hasOwnProperty(key)) {
-                            output += `<li>${key}: ${dayDict[key]}</li>`;
-                        }
+                    for (let item of dayList) {
+                        output += `<li>${item}</li>`;
                     }
                     output += '</ul>';  // Close the unordered list
 
