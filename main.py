@@ -45,10 +45,3 @@ def get_sheet_info(center):
     # base = month.Base(center=center, data=data)
 
     # database.save_base(base)
-
-
-m = database.load_base("CCG")
-nm = month.create_new_month(m, 2023, 11)
-
-d_k = month.DIAS_SEM[nm.gen_curr_date(25).weekday()], str(25)
-print(d_k)

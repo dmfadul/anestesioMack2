@@ -1,5 +1,4 @@
-import session_var
-import sequences
+# import session_var
 import datetime
 import settings
 import calendar
@@ -115,7 +114,7 @@ class Month(Base):
 
     @property
     def first_week_day(self):
-        str_day = session_var.STR_DAY
+        str_day = settings.STR_DAY
         return datetime.datetime.strptime(f"{str_day}/{self.str_month}/{self.str_year}", "%d/%m/%Y").weekday()
 
     @property
@@ -126,7 +125,7 @@ class Month(Base):
 
     @property
     def month_days(self):
-        str_day = session_var.STR_DAY
+        str_day = settings.STR_DAY
         days = [str(x % self.month_len + 1) for x in range(str_day - 1, str_day + self.month_len - 1)]
 
         return days
@@ -149,7 +148,7 @@ class Month(Base):
         return calendar_list
 
     def gen_curr_date(self, curr_day):
-        if session_var.STR_DAY <= curr_day <= 31:
+        if settings.STR_DAY <= curr_day <= 31:
             curr_month, curr_year = int(self.str_month), int(self.str_year)
         else:
             curr_month, curr_year = int(self.month), int(self.year)
@@ -159,7 +158,7 @@ class Month(Base):
         return current_date
 
     def resolve_sequences(self):
-        seq_dict = sequences.index.get(self.center)
+        seq_dict = settings.SEQ_INDEX.get(self.center)
 
         for row_num in range(len(self.data)):
             name = self.data[row_num][0]
@@ -174,7 +173,7 @@ class Month(Base):
                 if curr_weekday is None or curr_day is None:
                     continue
 
-                str_loop = sequences.str_point + datetime.timedelta(settings.DIAS_SEM.index(curr_weekday))
+                str_loop = settings.SEQ_STR_POINT + datetime.timedelta(settings.DIAS_SEM.index(curr_weekday))
                 delta = self.gen_curr_date(curr_day) - str_loop
                 parity = (delta.days//7) % 2
 
@@ -187,7 +186,7 @@ class Month(Base):
 
 
 def create_new_month(base, year, month):
-    new_month = Month(user=session_var.user, center=base.center, year=year, month=month, leader=session_var.LEADER)
+    new_month = Month(user=settings.user, center=base.center, year=year, month=month, leader=settings.LEADER)
 
     month_days = ['']+new_month.month_days
     week_days = ['']+[settings.DIAS_SEM[(new_month.first_week_day + i) % 7] for i in range(len(month_days)-1)]

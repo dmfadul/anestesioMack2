@@ -1,5 +1,5 @@
 import month as mt
-import session_var
+import settings
 
 import datetime
 import sqlite3
@@ -52,7 +52,7 @@ def save_user(crm, name, phone, email, rqe):
 
 def save_base(base):
     data = json.dumps(base.data, ensure_ascii=False)
-    values = base.id, base.center, base.hash, session_var.user, base.lst_change, data
+    values = base.id, base.center, base.hash, settings.user, base.lst_change, data
     save_to_database("months.db", "bases", values)
 
 
@@ -69,7 +69,7 @@ def load_base(center):
 
 def save_month(month):
     data = json.dumps(month.data, ensure_ascii=False)
-    values = month.id, month.center, month.status, month.hash, session_var.user, month.lst_change, data
+    values = month.id, month.center, month.status, month.hash, settings.user, month.lst_change, data
     save_to_database("months.db", "months", values)
 
 

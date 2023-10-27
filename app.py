@@ -1,7 +1,7 @@
-from flask import Flask, session, render_template, request, abort, redirect, url_for, flash, jsonify
-import session_var
+from flask import Flask, session, render_template, request, abort, redirect, url_for, jsonify
 import secret_key
 import functools
+import settings
 import database
 import json
 
@@ -59,7 +59,7 @@ def login():
 
         if users.get(crm) == password:
             session["crm"] = crm
-            session_var.user = crm
+            settings.user = crm
             return redirect(url_for("hub"))
 
     return render_template("login.html")
@@ -68,7 +68,7 @@ def login():
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
-    session_var.user = "ADMIN"
+    settings.user = "ADMIN"
     return redirect(url_for('login'))
 
 
