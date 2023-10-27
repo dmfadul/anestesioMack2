@@ -1,6 +1,7 @@
 from flask import Flask, session, render_template, request, abort, redirect, url_for, flash, jsonify
 import session_var
 import secret_key
+import functools
 import database
 import json
 
@@ -14,6 +15,15 @@ with open("users_dict.json", 'r') as f:
 month = database.load_month("CCG", 2023, 11)
 
 
+def login_required(route):
+    @functools.wraps(route)
+    def route_wrapper(*args, **kwargs):
+        if not session.get("crm"):
+            return redirect(url_for("hub"))
+        return route(*args, **kwargs)
+    return route_wrapper
+
+
 @app.route("/")
 def hub():
     if not session.get("crm"):
@@ -22,17 +32,19 @@ def hub():
 
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
     return render_template("dashboard.html")
-    # return redirect(url_for("calendar"))
 
 
 @app.route("/calendar/")
+@login_required
 def calendar():
     return render_template("calendar.html", month=month)
 
 
 @app.route('/calendar_day/<int:day>', methods=['GET'])
+@login_required
 def calendar_day(day):
     day_data = month.calendar_dict(day)
 
@@ -48,7 +60,7 @@ def login():
         if users.get(crm) == password:
             session["crm"] = crm
             session_var.user = crm
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("hub"))
 
     return render_template("login.html")
 
@@ -82,6 +94,7 @@ def signup():
 
 
 @app.route("/protected")
+@login_required
 def protected():
     if not session.get("crm"):
         abort(401)
@@ -89,5 +102,6 @@ def protected():
 
 
 @app.route("/table")
+@login_required
 def table():
     return render_template("table.html", data=month.table)
