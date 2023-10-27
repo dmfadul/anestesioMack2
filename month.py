@@ -144,7 +144,7 @@ class Month(Base):
     def calendar_dict(self, day):
         day_key = settings.DIAS_SEM[self.gen_curr_date(day).weekday()], str(day)
         calendar_dict = self.data_dict_days.get(day_key)
-        calendar_list = [f"{key}: {value}" for key, value in calendar_dict.items()]
+        calendar_list = [f"{key}*{value}" for key, value in calendar_dict.items()]
 
         return calendar_list
 

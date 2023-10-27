@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     let dayList = data.data;
 
                     for (let item of dayList) {
-                        output += `<li>${item}</li>`;
+                        output += `<li>${item.split("*").join("<br>")}</li>`;
                     }
                     output += '</ul>';  // Close the unordered list
 
