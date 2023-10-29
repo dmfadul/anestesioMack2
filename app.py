@@ -5,29 +5,25 @@ import settings
 import database
 import json
 
-app = Flask(__name__)
 
+app = Flask(__name__)
 app.secret_key = secret_key.secret_key  # Does it have to change periodically?
 
-with open("users_dict.json", 'r') as f:
-    users = json.load(f)
-
-month = database.load_month("CCG", 2023, 11)
+month = database.load_month("CCG", 2023, 10, 0)
 
 
 def login_required(route):
     @functools.wraps(route)
     def route_wrapper(*args, **kwargs):
         if not session.get("crm"):
-            return redirect(url_for("hub"))
+            return redirect(url_for("login"))
         return route(*args, **kwargs)
     return route_wrapper
 
 
 @app.route("/")
+@login_required
 def hub():
-    if not session.get("crm"):
-        return redirect(url_for("login"))
     return redirect(url_for("dashboard"))
 
 
@@ -35,6 +31,11 @@ def hub():
 @login_required
 def dashboard():
     return render_template("dashboard.html")
+
+
+@app.route("/dashboard-admin")
+def dashboard_admin():
+    return render_template("dashboard-admin.html")
 
 
 @app.route("/calendar/")
@@ -57,8 +58,9 @@ def login():
         crm = request.form.get("crm")
         password = request.form.get("password")
 
-        if users.get(crm) == password:
+        if database.get_user_password(crm) and database.get_user_password(crm) == password:
             session["crm"] = crm
+            session["status"] = database.get_user_status(crm)
             settings.user = crm
             return redirect(url_for("hub"))
 
@@ -82,11 +84,7 @@ def signup():
         rqe = request.form.get("rqe")
         password = request.form.get("password")
 
-        database.save_user(crm, name, phone, email, rqe)
-        users[crm] = password
-
-        with open("users_dict.json", 'w') as g:
-            json.dump(users, g)
+        database.add_user(crm, password, name, phone, email, rqe)
 
         return redirect(url_for("hub"))
 
@@ -104,4 +102,4 @@ def protected():
 @app.route("/table")
 @login_required
 def table():
-    return render_template("table.html", data=month.table)
+    return render_template("table.html", data=month.data)

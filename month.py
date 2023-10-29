@@ -1,4 +1,3 @@
-# import session_var
 import datetime
 import settings
 import calendar
@@ -8,10 +7,7 @@ import json
 
 
 class Base:
-    lst_change = datetime.datetime.now().strftime("%Y-%b-%d %H:%M")
-
-    def __init__(self, user=None, center=None, data=None):
-        self.user = user
+    def __init__(self, center=None, data=None):
         self.center = center
         self.data = data if data is not None else []
 
@@ -79,7 +75,7 @@ class Base:
 class Month(Base):
 
     def __init__(self, user=None, center=None, data=None, year=None, month=None, status=0, leader=None):
-        super().__init__(user, center, data)
+        super().__init__(center, data)
 
         self.year = year
         self.month = month
@@ -93,10 +89,6 @@ class Month(Base):
     @property
     def month_name(self):
         return settings.MESES[self.month-1]
-
-    @property
-    def table(self):
-        return json.dumps(self.data[:-1])
 
     @property
     def str_month(self):
@@ -118,15 +110,10 @@ class Month(Base):
         return datetime.datetime.strptime(f"{str_day}/{self.str_month}/{self.str_year}", "%d/%m/%Y").weekday()
 
     @property
-    def month_len(self):
-        _, last_day = calendar.monthrange(self.str_year, self.str_month)
-
-        return last_day
-
-    @property
     def month_days(self):
+        _, month_len = calendar.monthrange(self.str_year, self.str_month)
         str_day = settings.STR_DAY
-        days = [str(x % self.month_len + 1) for x in range(str_day - 1, str_day + self.month_len - 1)]
+        days = [str(x % month_len + 1) for x in range(str_day - 1, str_day + month_len - 1)]
 
         return days
 

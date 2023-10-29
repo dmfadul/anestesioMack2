@@ -6,6 +6,7 @@ STR_DAY = 26
 LEADER = "DR. VICTOR HUGO MARCASSA"
 
 
+TODAY = datetime.date.today().strftime("%Y-%m-%d")
 DIAS_SEM = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM']
 MESES = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO",
          "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"]
@@ -18,13 +19,13 @@ ccg = {
 }
 
 cco = {
-    "Alberto David Fadul Filho": {('QUI', '*'): 'n'},
-    "Augusto Bernardo de Folchini": {('TER', '*'): 'n'},
-    "Elthon André Brambila": {('TER', '*'): 'n'},
-    "Gilberto Miguel Stroparo": {('QUI', '*'): 'n', ('QUI', '*'): 'd'},
-    "Ivo Rubens Lechinewiski": {('QUA', '*'): 'n'},
-    "Kheder Bark Chebli": {('QUA', '*'): 'n'},
-    "Marcel Puretz de Moraes": {('QUI', '*'): 'd'}
+    "Alberto David Fadul Filho": {('QUI', 1): 'n'},
+    "Augusto Bernardo de Folchini": {('TER', 1): 'n'},
+    "Elthon André Brambila": {('TER', 0): 'n'},
+    "Gilberto Miguel Stroparo": {('QUI', 1): 'd', ('QUI', 0): 'n'},
+    "Ivo Rubens Lechinewiski": {('QUA', 0): 'n'},
+    "Kheder Bark Chebli": {('QUA', 1): 'n'},
+    "Marcel Puretz de Moraes": {('QUI', 0): 'd'}
 }
 
 ccq = {}
