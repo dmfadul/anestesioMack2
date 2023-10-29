@@ -80,6 +80,18 @@ def get_user_status(crm):
     return status
 
 
+def change_user_status(crm, new_status):
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    query = "UPDATE users SET status = ? WHERE id = ?;"
+
+    cursor.execute(query, (new_status, crm))
+    conn.commit()
+
+    conn.close()
+
+
 def save_base(base, user="ADMIN"):
     data = json.dumps(base.data, ensure_ascii=False)
     lst_change = datetime.datetime.now().strftime("%Y-%b-%d %H:%M") 
